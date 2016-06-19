@@ -1,8 +1,49 @@
-<p>This is the partial for view 1.</p>
-<md-button ng-click="ordernar()">Ordenar</md-button>
-<br>
-<div>
-    <div ng-repeat="user in users">
-        Email: {{user.name.title + '.' + user.name.first}}
+<navbar></navbar>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <p>This is the partial for view 1.</p>
+            <md-button ng-click="ordernar()">Ordenar</md-button>
+            <br>
+            <div>
+                <div ng-repeat="user in users">
+                    Email: {{user.name.title + '.' + user.name.first}}
+                </div>
+            </div>
+            <br>
+            <hc-chart options="chartOptions">Placeholder for generic chart</hc-chart>
+        </div>
     </div>
 </div>
+
+
+<!--
+<div layout="column" ng-cloak>
+    <md-toolbar class="md-warn">
+        <div class="md-toolbar-tools">
+            <h2 class="md-flex">Toolbar: md-warn</h2>
+        </div>
+    </md-toolbar>
+    <div class='md-padding' layout="row" layout-wrap>
+        <md-content flex layout-padding>
+            <p>This is the partial for view 1.</p>
+            <md-button ng-click="ordernar()">Ordenar</md-button>
+            <br>
+            <div>
+                <div ng-repeat="user in users">
+                    Email: {{user.name.title + '.' + user.name.first}}
+                </div>
+            </div>
+            <br>
+            <md-card>
+                <md-card-content>
+                    <hc-chart options="chartOptions">Placeholder for generic chart</hc-chart>
+                </md-card-content>
+                <div class="md-actions" layout="row" layout-align="end center">
+                    <md-button>Save</md-button>
+                    <md-button>View</md-button>
+                </div>
+            </md-card>
+        </md-content>
+    </div>
+</div>-->

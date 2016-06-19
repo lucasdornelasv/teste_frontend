@@ -13,10 +13,11 @@
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
   <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/app.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
-<body>
+<body ng-app="myApp" ng-strict-di>
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
@@ -25,14 +26,19 @@
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-resource/angular-resource.min.js"></script>
   <script src="bower_components/angular-animate/angular-animate.min.js"></script>
   <script src="bower_components/angular-aria/angular-aria.min.js"></script>
   <script src="bower_components/angular-material/angular-material.min.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <script src="bower_components/highcharts/highcharts.js"></script>
   <script src="app.js"></script>
-  <script src="components/api/FrontEndData.service.js"></script>
+  <script src="components/api/FrontEndData.resource.js"></script>
+  <script src="components/highchart/highchart.directive.js"></script>
+  <script src="components/navbar/navbar.directive.js"></script>
   <script src="views/home/home.controller.js"></script>
   <script src="views/home/home.js"></script>
 </body>

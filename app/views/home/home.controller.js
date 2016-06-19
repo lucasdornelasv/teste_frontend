@@ -1,54 +1,62 @@
 'use strict';
 
 angular.module('myApp')
-    .controller('HomeCtrl', function ($scope, FrontEndData) {
-        $scope.users = [];
-        $scope.brands = [];
-        $scope.interactions = [];
+    .filter('customSorter', function(){
+        return function(items, field){
+            var filtered = [];
+            angular.forEach(items, function(item) {
+                filtered.push(item);
+            });
+            filtered.sort(function (a, b) {
+                return (CustomOrder(a.class) > CustomOrder(b.class) ? 1 : -1);
+            });
+            return filtered;
+        };
+    })
+    .controller('HomeCtrl', function ($scope, $filter, users, brands, interactions) {
+        $scope.users = users || [];
+        $scope.brands = brands || [];
+        $scope.interactions = interactions || [];
 
-        FrontEndData.getUsers().$promise
-            .then(function (users) {
-                $scope.users = users;
+        if($scope.users && $scope.users instanceof Array){
+            $scope.users.sort(function (userA, userB) {
+                return getInteractions(userA).length < getInteractions(userB).length ? 1 : -1;
             });
-        FrontEndData.getInteractions().$promise
-            .then(function (interactions) {
-                $scope.interactions = interactions;
+        }
+
+        function getInteractions(user){
+            return $scope.interactions.filter(function(interaction){
+                return interaction.user == user.id;
             });
-        FrontEndData.getBrands().$promise
-            .then(function (brands) {
-                $scope.brands = brands;
-            });
+        }
+
+        $scope.chartOptions = {
+            title: {
+                text: 'Temperature data'
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+
+            series: [{
+                data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+            }]
+        };
+
+
+
+        /*$scope.users = $filter('orderBy')($scope.users, function(){
+            return function(items, field){
+                items.sort(function (userA, userB) {
+                    return getInteractions(userA).length < getInteractions(userB).length ? 1 : -1;
+                });
+                return items;
+            }
+        });*/
 
         $scope.ordernar = function(){
-            var interactions = [];
-
-            function exists(userId){
-                var resp = false;
-
-                for(var i in interactions){
-                    var aux = interactions[i];
-                    if(aux.user == userId){
-                        resp = i;
-                        break;
-                    }
-                }
-                return resp;
-            }
-
-            for(var i in $scope.interactions){
-                var interaction = $scope.interactions[i];
-                var resp = exists(interaction.user);
-                if(resp){
-                    interactions[resp].interactions++;
-                }else{
-                    interactions.push({user: interaction.user, interactions: 1});
-                }
-            }
-
-            var a = interactions.filter(function(item){
-                return item.user == 18;
-            });
-
-            console.log(a);
-        };
+            console.log(getInteractions($scope.users[0]));
+            console.log(getInteractions($scope.users[$scope.users.length - 1]));
+        }
     });
