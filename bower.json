@@ -2,7 +2,7 @@
   "name": "teste_frontend",
   "description": "Teste de frontend",
   "version": "0.0.0",
-  "homepage": "https://github.com/angular/angular-seed",
+  "homepage": "https://github.com/luucasdornelas/teste_frontend",
   "license": "MIT",
   "private": true,
   "dependencies": {
