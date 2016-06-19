@@ -2,16 +2,25 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <p>This is the partial for view 1.</p>
-            <md-button ng-click="ordernar()">Ordenar</md-button>
-            <br>
-            <div>
-                <div ng-repeat="user in users">
-                    Email: {{user.name.title + '.' + user.name.first}}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Usuários Influentes</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-4">
+                        <label for="brands">Filtrar por marca</label>
+                        <select id="brands" class="form-control" ng-model="brandFilter"
+                                ng-options="brand.id as brand.name for brand in brands">
+                            <!--<option value="-1" selected>Sem filtro</option>-->
+                        </select>
+                    </div>
+                    <highchart config="chartConfig"></highchart>
+                    <hr>
+                    <div>
+                        {{userInfo.name.full}}
+                    </div>
                 </div>
             </div>
-            <br>
-            <hc-chart options="chartOptions">Placeholder for generic chart</hc-chart>
         </div>
     </div>
 </div>

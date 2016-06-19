@@ -1,62 +1,179 @@
 'use strict';
 
 angular.module('myApp')
-    .filter('customSorter', function(){
-        return function(items, field){
-            var filtered = [];
-            angular.forEach(items, function(item) {
-                filtered.push(item);
-            });
-            filtered.sort(function (a, b) {
-                return (CustomOrder(a.class) > CustomOrder(b.class) ? 1 : -1);
-            });
-            return filtered;
-        };
-    })
     .controller('HomeCtrl', function ($scope, $filter, users, brands, interactions) {
         $scope.users = users || [];
         $scope.brands = brands || [];
         $scope.interactions = interactions || [];
 
-        if($scope.users && $scope.users instanceof Array){
-            $scope.users.sort(function (userA, userB) {
-                return getInteractions(userA).length < getInteractions(userB).length ? 1 : -1;
-            });
-        }
+        $scope.chartConfig = {};
+        $scope.brandFilter = -1;
 
-        function getInteractions(user){
-            return $scope.interactions.filter(function(interaction){
-                return interaction.user == user.id;
-            });
-        }
-
-        $scope.chartOptions = {
-            title: {
-                text: 'Temperature data'
+        var options = {
+            chart: {
+                type: "column"
             },
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            },
-
-            series: [{
-                data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-            }]
+            plotOptions: {
+                series: {
+                    stacking: ""
+                }
+            }
         };
 
-
-
-        /*$scope.users = $filter('orderBy')($scope.users, function(){
-            return function(items, field){
-                items.sort(function (userA, userB) {
-                    return getInteractions(userA).length < getInteractions(userB).length ? 1 : -1;
+        if ($scope.users && $scope.users instanceof Array) {
+            angular.forEach($scope.users, function (item) {
+                var interactions = getInteractions({user:item});
+                var middle = item.name.title + '.' + item.name.first;
+                Object.assign(item, {
+                    name: {
+                        middle: middle,
+                        full: middle  + ' ' + item.name.last
+                    },
+                    interactions: interactions,
+                    getInteractions: function(brandId){
+                        return interactions.filter(function(item){
+                            return item.brand == Number(brandId);
+                        });
+                    }
                 });
-                return items;
-            }
-        });*/
+            });
 
-        $scope.ordernar = function(){
-            console.log(getInteractions($scope.users[0]));
-            console.log(getInteractions($scope.users[$scope.users.length - 1]));
+            $scope.users.sort(function (userA, userB) {
+                return userA.interactions.length < userB.interactions.length ? 1 : -1;
+            });
+        }
+
+        $scope.$watch('brandFilter', function(newValue, oldValue){
+            var auxBrand = {id: oldValue};
+            if($scope.brandFilter != -1){
+                for(var i in $scope.brands){
+                    var brand = $scope.brands[i];
+                    if(brand.id == newValue){
+                        auxBrand = brand;
+                        break;
+                    }
+                }
+            }
+            loadChart(auxBrand);
+        });
+
+        function loadChart(brand){
+            function isBrand(brand){
+                return brand && brand.id && brand.id != -1;
+            }
+            var auxUsersResult = isBrand(brand) ? $scope.users.filter(function(user){
+                var resp = false;
+                for(var i in user.interactions){
+                    var interaction = user.interactions[i];
+                    if(interaction.brand == brand.id){
+                        resp = true;
+                        break;
+                    }
+                }
+                return resp;
+            }) : $scope.users;
+
+            if(isBrand(brand)){
+                auxUsersResult.sort(function (userA, userB) {
+                    return userA.getInteractions(brand.id).length < userB.getInteractions(brand.id).length ? 1 : -1;
+                });
+            }
+
+            var auxInteractionsResult = isBrand(brand) ? $scope.interactions.filter(function(interaction){
+                return interaction.brand == brand.id;
+            }) : $scope.interactions;
+
+            $scope.pieData = [];
+            $scope.usersResult = [];
+
+            angular.forEach(auxUsersResult, function (item) {
+                $scope.usersResult.push(item.name.first);
+
+                var auxCountInteractions = (isBrand(brand) ? item.getInteractions(brand.id) : item.interactions).length;
+                $scope.pieData.push({
+                    name: item.name.middle,
+                    y: numToPercent(auxCountInteractions),
+                    countInteractions: auxCountInteractions,
+                    user: item,
+                    brand: brand
+                });
+            });
+
+            $scope.pieData[0] = Object.assign($scope.pieData[0], {
+                sliced: true,
+                selected: true
+            });
+            loadInfoUsers($scope.pieData[0]);
+
+            $scope.chartConfig = {
+                options: options,
+                series: [
+                    {
+                        name: brand.name || 'Geral',
+                        data: $scope.pieData,
+                        type: "column",
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.y}%'
+                        },
+                        tooltip: {
+                            headerFormat: '{point.name}',
+                            pointFormat: '{series.name}: <p>Número de Iterações: <b>{point.countInteractions}</b></p>'
+                        },
+                        showInLegend: false,
+                        events:{
+                            click:function(e){
+                                $scope.$apply(function(){
+                                    loadInfoUsers(e.point.options, e.point);
+                                });
+                            }
+                        }
+                    }
+                ],
+                title: {
+                    text: "Usuários Influentes"
+                },
+                credits: {
+                    enabled: true
+                },
+                loading: false,
+                size: 100,
+                xAxis: {
+                    categories: $scope.usersResult
+                }
+            };
+            if(isBrand(brand)){
+                $scope.chartConfig.subtitle = {
+                    text: 'Marca: <b>'+brand.name+'</b>, Total de iterações: '+
+                    '<b>'+getInteractions({brand: brand}).length+'</b>'
+                };
+            }
+        }
+
+        function loadInfoUsers(options, point){
+            console.log(point);
+            $scope.userInfo = options.user;
+        }
+
+        function getInteractions(obj) {
+            obj = obj || {};
+            return $scope.interactions.filter(function (interaction) {
+                    var resp = false;
+                    if(obj.user && obj.brand){
+                        resp = interaction.user == obj.user.id && interaction.brand == obj.brand.id;
+                    }else if(obj.user){
+                        resp = interaction.user == obj.user.id;
+                    }else if(obj.brand){
+                        resp = interaction.brand == obj.brand.id;
+                    }
+                    return resp;
+            }) || [];
         }
     });
+
+function numToPercent(number, context) {
+    if (number && context && !isNaN(number) && !isNaN(context)) number = 100 * (Number(number) / Number(context));
+    return number;
+}
