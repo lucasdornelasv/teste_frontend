@@ -9,15 +9,38 @@
                 <div class="panel-body">
                     <div class="col-md-4">
                         <label for="brands">Filtrar por marca</label>
-                        <select id="brands" class="form-control" ng-model="brandFilter"
-                                ng-options="brand.id as brand.name for brand in brands">
-                            <!--<option value="-1" selected>Sem filtro</option>-->
+                        <select id="brands" class="form-control" ng-model="brandFilter">
+                            <option value="0">Sem filtro</option>
+                            <option ng-repeat="brand in brands" value="{{brand.id}}">{{brand.name}}</option>
                         </select>
                     </div>
                     <highchart config="chartConfig"></highchart>
                     <hr>
-                    <div>
-                        {{userInfo.name.full}}
+                    <div class="list-group">
+                        <div class="list-group-item">
+                            <div class="row-picture">
+                                <img class="circle" src="{{userInfo.picture.thumbnail}}" alt="icon">
+                            </div>
+                            <div class="row-content">
+                                <h4 class="list-group-item-heading">{{userInfo.name.full}}</h4>
+                                <p class="list-group-item-text">
+                                    Email: {{userInfo.email}}
+                                </p>
+                                <p class="list-group-item-text">
+                                    Gênero: {{userInfo.gender | translate}}
+                                </p>
+                                <p class="list-group-item-text">
+                                    Naturalidade: {{userInfo.nat}}
+                                </p>
+                                <p class="list-group-item-text">
+                                    Telefone: {{userInfo.phone}}
+                                </p>
+                                <p class="list-group-item-text">
+                                    Celular: {{userInfo.cell}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="list-group-separator"></div>
                     </div>
                 </div>
             </div>
