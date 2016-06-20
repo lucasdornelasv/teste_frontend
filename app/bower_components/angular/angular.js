@@ -16636,8 +16636,8 @@ function $RootScopeProvider() {
      *
      * @param {Object.<string, function()>=} providers Map of service factory which need to be
      *                                       provided for the current scope. Defaults to {@link ng}.
-     * @param {Object.<string, *>=} instanceCache Provides pre-instantiated api which should
-     *                              append/override api provided by `providers`. This is handy
+     * @param {Object.<string, *>=} instanceCache Provides pre-instantiated services which should
+     *                              append/override services provided by `providers`. This is handy
      *                              when unit-testing and having the need to override a default
      *                              service.
      * @returns {Object} Newly created scope.
