@@ -7,10 +7,10 @@
                     <h3 class="panel-title">Usuários Influentes</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="col-md-4">
+                    <div class="col-sm-4">
                         <label for="brands">Filtrar por marca</label>
                         <select id="brands" class="form-control" ng-model="brandFilter">
-                            <option value="0">Sem filtro</option>
+                            <option value="0" selected="selected">Sem filtro</option>
                             <option ng-repeat="brand in brands" value="{{brand.id}}">{{brand.name}}</option>
                         </select>
                     </div>
@@ -47,35 +47,3 @@
         </div>
     </div>
 </div>
-
-
-<!--
-<div layout="column" ng-cloak>
-    <md-toolbar class="md-warn">
-        <div class="md-toolbar-tools">
-            <h2 class="md-flex">Toolbar: md-warn</h2>
-        </div>
-    </md-toolbar>
-    <div class='md-padding' layout="row" layout-wrap>
-        <md-content flex layout-padding>
-            <p>This is the partial for view 1.</p>
-            <md-button ng-click="ordernar()">Ordenar</md-button>
-            <br>
-            <div>
-                <div ng-repeat="user in users">
-                    Email: {{user.name.title + '.' + user.name.first}}
-                </div>
-            </div>
-            <br>
-            <md-card>
-                <md-card-content>
-                    <hc-chart options="chartOptions">Placeholder for generic chart</hc-chart>
-                </md-card-content>
-                <div class="md-actions" layout="row" layout-align="end center">
-                    <md-button>Save</md-button>
-                    <md-button>View</md-button>
-                </div>
-            </md-card>
-        </md-content>
-    </div>
-</div>-->

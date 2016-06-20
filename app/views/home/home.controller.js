@@ -45,7 +45,7 @@ angular.module('myApp')
 
         $scope.$watch('brandFilter', function(newValue, oldValue){
             var auxBrand = {id: oldValue};
-            if($scope.brandFilter != 0){
+            if($scope.brandFilter && $scope.brandFilter != 0){
                 for(var i in $scope.brands){
                     var brand = $scope.brands[i];
                     if(brand.id == newValue){
@@ -78,10 +78,6 @@ angular.module('myApp')
                     return userA.getInteractions(brand.id).length < userB.getInteractions(brand.id).length ? 1 : -1;
                 });
             }
-
-            var auxInteractionsResult = isBrand(brand) ? $scope.interactions.filter(function(interaction){
-                return interaction.brand == brand.id;
-            }) : $scope.interactions;
 
             $scope.pieData = [];
             $scope.usersResult = [];
@@ -119,7 +115,6 @@ angular.module('myApp')
                             format: '<b>{point.name}</b>: {point.y}%'
                         },
                         tooltip: {
-                            headerFormat: '{point.name}',
                             pointFormat: '{series.name}: <p>Número de Iterações: <b>{point.countInteractions}</b></p>'
                         },
                         showInLegend: false,
@@ -144,12 +139,19 @@ angular.module('myApp')
                     categories: $scope.usersResult
                 }
             };
+
+            var subtitle = {};
             if(isBrand(brand)){
-                $scope.chartConfig.subtitle = {
+                subtitle = {
                     text: 'Marca: <b>'+brand.name+'</b>, Total de iterações: '+
                     '<b>'+getInteractions({brand: brand}).length+'</b>'
                 };
+            }else{
+                subtitle = {
+                    text: 'Total de iterações: '+ '<b>'+$scope.interactions.length+'</b>'
+                };
             }
+            $scope.chartConfig.subtitle = subtitle;
         }
 
         function loadInfoUsers(options, point){
