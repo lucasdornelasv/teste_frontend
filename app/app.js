@@ -9,9 +9,4 @@ angular.module('myApp', [
     $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise('/');
-})
-.filter('translate', function(){
-    return function (value){
-        return value
-    }
 });

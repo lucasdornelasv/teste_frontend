@@ -23,7 +23,7 @@
                                 <img class="circle" src="{{userInfo.picture.thumbnail}}" alt="icon">
                             </div>
                             <div class="row-content">
-                                <h4 class="list-group-item-heading">{{userInfo.name.full}}</h4>
+                                <h4 class="list-group-item-heading">{{userInfo.name.full | titleCase}}</h4>
                                 <p class="list-group-item-text">
                                     Email: {{userInfo.email}}
                                 </p>

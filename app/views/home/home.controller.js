@@ -22,7 +22,7 @@ angular.module('myApp')
         if ($scope.users && $scope.users instanceof Array) {
             angular.forEach($scope.users, function (item) {
                 var interactions = getInteractions({user:item});
-                var middle = item.name.title + '.' + item.name.first;
+                var middle = item.name.title + '. ' + item.name.first;
                 Object.assign(item, {
                     name: {
                         middle: middle,
