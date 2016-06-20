@@ -9,9 +9,10 @@
                 <div class="panel-body">
                     <div class="col-sm-4">
                         <label for="brands">Filtrar por marca</label>
-                        <select id="brands" class="form-control" ng-model="brandFilter">
-                            <option value="0" selected="selected">Sem filtro</option>
-                            <option ng-repeat="brand in brands" value="{{brand.id}}">{{brand.name}}</option>
+                        <select id="brands" class="form-control" ng-model="brandFilter" required>
+                            <option value="" ng-selected="brandFilter == ''">Sem filtro</option>
+                            <option ng-repeat="brand in brands" ng-selected="brandFilter == brand.id"
+                                    value="{{brand.id}}">{{brand.name}}</option>
                         </select>
                     </div>
                     <highchart config="chartConfig"></highchart>

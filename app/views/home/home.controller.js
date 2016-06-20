@@ -7,7 +7,6 @@ angular.module('myApp')
         $scope.interactions = interactions || [];
 
         $scope.chartConfig = {};
-        $scope.brandFilter = 0;
 
         var options = {
             chart: {
@@ -45,7 +44,7 @@ angular.module('myApp')
 
         $scope.$watch('brandFilter', function(newValue, oldValue){
             var auxBrand = {id: oldValue};
-            if($scope.brandFilter && $scope.brandFilter != 0){
+            if($scope.brandFilter && $scope.brandFilter != ''){
                 for(var i in $scope.brands){
                     var brand = $scope.brands[i];
                     if(brand.id == newValue){
@@ -59,7 +58,7 @@ angular.module('myApp')
 
         function loadChart(brand){
             function isBrand(brand){
-                return brand && brand.id && brand.id != 0;
+                return brand && brand.id && brand.id != '';
             }
             var auxUsersResult = isBrand(brand) ? $scope.users.filter(function(user){
                 var resp = false;
